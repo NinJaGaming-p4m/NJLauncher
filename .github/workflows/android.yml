@@ -17,7 +17,13 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Set up JDK 17
+      - name: Set up Java 8 (Required for jre_lwjgl3glfw)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Set up Java 17 (Default build JDK)
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -28,18 +34,3 @@ jobs:
           mkdir -p app_pojavlauncher/libs
           cd app_pojavlauncher/libs
           wget -q https://github.com/PojavLauncherTeam/LTW/releases/latest/download/ltw-release.aar
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build APK without runtime
-        run: |
-          mkdir -p out
-          ./gradlew assembleDebug
-          mv app_pojavlauncher/build/outputs/apk/debug/*.apk out/NinjaLauncher-debug.apk
-
-      - name: Upload Ninja Launcher APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: NinjaLauncher-APK
-          path: out/NinjaLauncher-debug.apk
